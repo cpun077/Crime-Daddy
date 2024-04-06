@@ -1,0 +1,82 @@
+.dashboard {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+.dashboard #visuals {
+    background-color: #1C2025;
+    width: 75%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+}
+
+.dashboard #visuals img {
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.dashboard .chat {
+    width: 25%;
+    height: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard .chat form {
+    margin-top: auto;
+}
+
+.dashboard .chat form .textarea {
+    display:flex;
+    align-items: end;
+    justify-content: center;
+    padding: 2vh 0.3vw 5vh 0.5vw;
+}
+
+.chatinput {
+    resize: vertical;
+    max-height: 20vh;
+    min-height: 21px;
+}
+
+.dashboard .chat .versionheader {
+    padding: 2.5vh 0 2.5vh 0;
+    width: auto;
+    display: grid;
+    place-items: center;
+    background-color: #1C2025;
+    border-style: solid;
+    border-color: black;
+}
+
+.logcontainer {
+    height: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.logcontainer .msg {
+    display: flex;
+    align-items: start;
+    padding: 0.5vw;
+}
+
+.logcontainer .msg#severe {
+    background-color: red;
+}
+
+.logcontainer .msg img {
+    width: 2vw;
+    height: 2vw;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.logcontainer .msg .text {
+    width: calc(100% - 2.5vw);
+    padding: 0 0.5vw 0 0.5vw;
+    overflow-wrap: break-word;
+}
