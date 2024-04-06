@@ -1,0 +1,71 @@
+.sub {
+    color: white;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sub .card {
+    width: 30%;
+    height: 40%;
+    background-image: var(--vicious_stance);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 30px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.inputcontainer {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    border-radius: 30px;
+    max-height: 40px;
+    overflow: hidden;
+    width: 80%;
+}
+
+.inputcontainer input {
+    background: transparent;
+    border: 0;
+    padding: 10px 18px;
+    width: 100%;
+}
+
+.card form button {
+    background-image: var(--phoenix_start);
+    color: black;
+    border-radius: 20px;
+    height: 40px;
+    border: 0;
+    cursor: pointer;
+    width: 50%;
+}
+
+form .buttoncontainer {
+    padding-top: 5vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logerr {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 25%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+  }

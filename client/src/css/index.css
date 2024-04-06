@@ -14,3 +14,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root {
+  --vicious_stance: linear-gradient(60deg, #29323c 0%, #485563 100%);
+  --phoenix_start: linear-gradient(to right, #f83600 0%, #f9d423 100%);
+}

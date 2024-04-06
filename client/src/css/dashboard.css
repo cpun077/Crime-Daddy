@@ -6,7 +6,7 @@
 }
 
 .dashboard #map {
-    background-color: #1C2025;
+    background-image: var(--vicious_stance);
     width: 75%;
     height: 100%;
     display: grid;
@@ -38,7 +38,7 @@
 
 .dashboard button#mapgen {
     padding: 3vh 0.5vw;
-    background-color: gray;
+    background-color: #1C2025;
     color: white;
     width: 70%;
 }
