@@ -11,6 +11,7 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path={'/'} element={<Views.Dashboard />} />
+        <Route path={'/subscribe'} element={<Views.Subscribe />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

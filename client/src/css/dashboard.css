@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: row;
     height: 100vh;
+    color: white;
 }
 
 .dashboard #map {
@@ -20,20 +21,34 @@
 .dashboard .chat {
     width: 25%;
     height: 100%;
-    color: white;
     display: flex;
     flex-direction: column;
 }
 
-.dashboard .chat form {
-    margin-top: auto;
+.dashboard button {
+    cursor: pointer;
+    border: none;
 }
 
-.dashboard .chat form .textarea {
+.dashboard .footer {
+    margin-top: auto;
     display:flex;
-    align-items: end;
+    justify-content: stretch;
+}
+
+.dashboard button#mapgen {
+    padding: 3vh 0.5vw;
+    background-color: gray;
+    color: white;
+    width: 70%;
+}
+
+.dashboard button#notis {
+    width: 30%;
+    background-color: yellow;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    padding: 2vh 0.3vw 5vh 0.5vw;
 }
 
 .chatinput {
@@ -42,7 +57,7 @@
     min-height: 21px;
 }
 
-.dashboard .chat .versionheader {
+.dashboard .chat .header {
     padding: 2.5vh 0 2.5vh 0;
     width: auto;
     display: grid;

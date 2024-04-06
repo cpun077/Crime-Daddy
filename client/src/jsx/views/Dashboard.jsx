@@ -3,6 +3,9 @@ import logo from '../../logo.svg';
 import { useState, useRef, useEffect } from 'react';
 import L from 'leaflet';
 import { heatLayer } from 'leaflet.heat';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
+import { useNavigate } from 'react-router-dom';
 
 const ChatMsg = (props) => {
   return (
@@ -27,6 +30,7 @@ const Dashboard = () => {
   useEffect(() => {
     scroll.current.scrollIntoView(false)
   }, [log]);
+  const navigate = useNavigate();
 
   async function getAlert() {
 
@@ -66,7 +70,7 @@ const Dashboard = () => {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map)
 
-      const heatmapLayer = L.heatLayer(data, {radius: 10}).addTo(map);
+      const heatmapLayer = L.heatLayer(data, { radius: 10 }).addTo(map);
 
     } catch (error) {
       console.error('Error fetching or processing CSV data:', error)
@@ -76,15 +80,12 @@ const Dashboard = () => {
   return (
     <div className='dashboard'>
       <div id='map'>
-        {/* <img src={logo} alt='Placeholder' /> */}
+        <MapOutlinedIcon fontSize='large'/>
       </div>
 
       <div className='chat'>
-        <div className='versionheader'>
+        <div className='header'>
           Crime Alerts
-          <button onClick={() => getVisual()}>
-            Generate Map
-          </button>
         </div>
 
         <div className='logcontainer'>
@@ -98,6 +99,15 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
+        </div>
+
+        <div className='footer'>
+          <button id='mapgen' onClick={() => getVisual()}>
+            Generate Map
+          </button>
+          <button id='notis' onClick={() => {navigate('/subscribe')}}>
+            Get <NotificationsNoneOutlinedIcon />'s
+          </button>
         </div>
       </div>
     </div>
