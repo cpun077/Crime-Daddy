@@ -1,0 +1,20 @@
+{
+    "latest_time": "2024-04-05T22:16:00.000",
+    "sender": "daddycrimereporter@gmail.com",
+    "sender_passwd": "tpanvsajeofmjwok",
+    "url": "https://kjoqipddoeeaquhbztgv.supabase.co",
+    "key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtqb3FpcGRkb2VlYXF1aGJ6dGd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI0MjM2NzEsImV4cCI6MjAyNzk5OTY3MX0.Ou9DqbpFRumG2ubbnqxNhyVv7bQNNkgSAQLjk52RmgY",
+    "data_url": "https://data.sfgov.org/resource/wg3w-h783.json?$query=SELECT%20incident_datetime%2C%20incident_date%2C%20incident_time%2C%20incident_year%2C%20incident_day_of_week%2C%20report_datetime%2C%20row_id%2C%20incident_id%2C%20incident_number%2C%20cad_number%2C%20report_type_code%2C%20report_type_description%2C%20filed_online%2C%20incident_code%2C%20incident_category%2C%20incident_subcategory%2C%20incident_description%2C%20resolution%2C%20intersection%2C%20cnn%2C%20police_district%2C%20analysis_neighborhood%2C%20supervisor_district%2C%20supervisor_district_2012%2C%20latitude%2C%20longitude%2C%20point%20ORDER%20BY%20incident_datetime%20DESC",
+    "columns": [
+        "incident_id",
+        "incident_datetime",
+        "incident_category",
+        "incident_subcategory",
+        "incident_description",
+        "intersection",
+        "police_district",
+        "analysis_neighborhood",
+        "latitude",
+        "longitude"
+    ]
+}
