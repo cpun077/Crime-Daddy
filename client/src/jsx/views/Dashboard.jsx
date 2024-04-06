@@ -1,5 +1,4 @@
 import '../../css/dashboard.css';
-import logo from '../../logo.svg';
 import { useState, useRef, useEffect } from 'react';
 import L from 'leaflet';
 import { heatLayer } from 'leaflet.heat';
@@ -80,7 +79,10 @@ const Dashboard = () => {
   return (
     <div className='dashboard'>
       <div id='map'>
-        <MapOutlinedIcon fontSize='large'/>
+        <div className='placeholder'>
+          <h3>Heatmap</h3>
+          <MapOutlinedIcon fontSize='large' />
+        </div>
       </div>
 
       <div className='chat'>
@@ -105,7 +107,7 @@ const Dashboard = () => {
           <button id='mapgen' onClick={() => getVisual()}>
             Generate Map
           </button>
-          <button id='notis' onClick={() => {navigate('/subscribe')}}>
+          <button id='notis' onClick={() => { navigate('/subscribe') }}>
             Get <NotificationsNoneOutlinedIcon />'s
           </button>
         </div>

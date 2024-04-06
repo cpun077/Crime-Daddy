@@ -5,6 +5,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+}
+
+.sub button {
+    cursor: pointer;
+    border: none;
 }
 
 .sub .card {
@@ -69,3 +75,17 @@ form .buttoncontainer {
     transform: translate(-50%, -50%);
     z-index: 9999;
   }
+
+.sub button#back {
+    width: 20%;
+    background-image: var(--phoenix_start);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+    border: none;
+}
+
+.sub#back {
+    background-image: url("../../public/confetti.gif");
+}

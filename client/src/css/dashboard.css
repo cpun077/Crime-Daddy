@@ -18,6 +18,12 @@
     max-height: 300px;
 }
 
+.dashboard #map .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .dashboard .chat {
     width: 25%;
     height: 100%;
@@ -49,6 +55,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    border: none;
 }
 
 .chatinput {
