@@ -5,11 +5,12 @@ import { heatLayer } from 'leaflet.heat';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import { useNavigate } from 'react-router-dom';
+import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
 
 const ChatMsg = (props) => {
   return (
     <div className='msg' id={props.id}>
-      <img src={'add image component here'} alt='Avatar' />
+      <LocalPoliceOutlinedIcon />
       <div className='text'>
         {props.text}
       </div>
