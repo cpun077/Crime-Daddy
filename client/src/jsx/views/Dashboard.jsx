@@ -2,6 +2,7 @@ import '../../css/dashboard.css';
 import logo from '../../logo.svg';
 import { useState, useRef, useEffect } from 'react';
 import L from 'leaflet';
+import { heatLayer } from 'leaflet.heat';
 
 const ChatMsg = (props) => {
   return (
