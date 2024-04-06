@@ -4,7 +4,7 @@
     height: 100vh;
 }
 
-.dashboard #visuals {
+.dashboard #map {
     background-color: #1C2025;
     width: 75%;
     height: 100%;
@@ -12,7 +12,7 @@
     place-items: center;
 }
 
-.dashboard #visuals img {
+.dashboard #map img {
     max-width: 300px;
     max-height: 300px;
 }
