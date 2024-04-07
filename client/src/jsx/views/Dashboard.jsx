@@ -32,10 +32,6 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getAlerts()
-  }, [])
-
   const getAlerts = async () => {
     try {
       const { data, error } = await supabase
@@ -54,19 +50,43 @@ const Dashboard = () => {
         })
         console.log(newlogs)
 
-        const { error: updateError } = await supabase
-            .from('CrimeReports')
-            .update({ Recent: true })
-            .eq('Recent', false)
-        if (updateError) {
-          console.log(updateError)
-        }
         setLog(prevlogs => [...prevlogs, ...newlogs])
       }
     } catch (error) {
-      console.error('Error checking for duplicate email or inserting email:', error)
+      console.error(error)
     }
   }
+
+  useEffect(() => {
+
+    let subscription = supabase
+    .channel('todos')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'CrimeReports' }, data => {
+      let msg = data.new
+      let time = msg.incident_datetime.split('T')[1].split('+')[0]
+      let loc = !isNaN(msg.analysis_neighborhood) ? (msg.analysis_neighborhood) : (msg.police_district)
+      let newlog = `${time} ${msg.incident_description} (${loc})}`
+      console.log(newlog)
+
+      setLog(prevlogs => [...prevlogs, newlog])
+    })
+    .subscribe()
+  
+    return async () => {
+      subscription.unsubscribe()
+      try {
+        const { error } = await supabase
+            .from('CrimeReports')
+            .update({ Recent: true })
+            .eq('Recent', false)
+        if (error) {
+          console.log(error)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }, [])
 
   const getVisual = async () => {
     try {
