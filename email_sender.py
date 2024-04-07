@@ -15,9 +15,11 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 
 class CrimeReporter:
     def __init__(self):
-        self.setup()
+        with open("config.json", "r") as jsonFile:
+            self.config = json.load(jsonFile)
+        self.supabase = create_client(self.config["url"], self.config["key"])
 
-    def setup(self):
+    def update(self):
         with open("config.json", "r") as jsonFile:
             self.config = json.load(jsonFile)
         columns = self.config["columns"]
@@ -27,9 +29,7 @@ class CrimeReporter:
 
         self.df = pd.DataFrame(data)
         self.df = self.df[columns]
-        self.supabase = create_client(self.config["url"], self.config["key"])
 
-    def update(self):
         latest_time = self.config["latest_time"]
         latest_date = datetime.strptime(latest_time, "%Y-%m-%dT%H:%M:%S.%f")
         
@@ -50,11 +50,13 @@ class CrimeReporter:
         for incident in new_incidents:
             report = incident.to_dict()
             report["Recent"] = False
+
             info = extract_information(incident.incident_description)
             if len(info) > 2:
                 severity = 1
             else:
                 severity = int(info)
+
             report["Severity"] = severity
             data, count = self.supabase.table('CrimeReports').insert(report).execute()
             send_message(incident)
@@ -64,6 +66,7 @@ class CrimeReporter:
         while True:
             print("Updating")
             self.update()
+            print("Sleeping")
             time.sleep(300)
 
 if __name__ == '__main__':
