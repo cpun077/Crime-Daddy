@@ -50,13 +50,14 @@ class CrimeReporter:
         for incident in new_incidents:
             report = incident.to_dict()
             report["Recent"] = False
-
+            severity = 1
+            """
             info = extract_information(incident.incident_description)
             if len(info) > 2:
                 severity = 1
             else:
                 severity = int(info)
-
+            """
             report["Severity"] = severity
             data, count = self.supabase.table('CrimeReports').insert(report).execute()
             send_message(incident)
@@ -67,7 +68,7 @@ class CrimeReporter:
             print("Updating")
             self.update()
             print("Sleeping")
-            time.sleep(300)
+            time.sleep(600)
 
 if __name__ == '__main__':
     reporter = CrimeReporter()

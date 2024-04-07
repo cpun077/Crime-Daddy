@@ -11,24 +11,28 @@ from crime_sender import send_message
 from supabase import Client, create_client
 from severity_ranker import extract_information
 
-with open("config.json", "r") as jsonFile:
-    config = json.load(jsonFile)
-columns = config["columns"]
-data_url = config["data_url"]
-with urllib.request.urlopen(data_url) as url:
-    data = json.load(url)
-
-df = pd.DataFrame(data)
-df = df[columns]
+dp = {}
+df = pd.read_csv("full_reports.csv")
+"""
 df["Severity"] = 1
-for i in range(1000):
-    incident = df.iloc[i]
-    info = extract_information(incident.incident_description)
+for index, row in df.iterrows():
+    print(index, len(dp))
+    desc = row["Incident Description"]
+    if desc in dp:
+        df.at[index, "Severity"] = dp[desc]
+        continue
+    info = extract_information(desc)
     if len(info) > 2:
         severity = 1
     else:
         severity = int(info)
-    df.at[i, "Severity"] = severity
-    print(incident.incident_description, "  :  ", severity)
+    df.at[index, "Severity"] = severity
+    dp[desc] = severity
+
+
 print(df)
-df.to_csv("reports.csv", encoding='utf-8', index=False)
+df.to_csv("full_reports.csv", encoding='utf-8', index=False)
+"""
+for index, row in df.iterrows():
+    print(row["Incident Description"], "    ", row["Severity"])
+    print("----------------------------------------------------")
