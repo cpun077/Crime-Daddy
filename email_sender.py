@@ -10,7 +10,7 @@ import pandas as pd
 from crime_sender import send_message
 from supabase import Client, create_client
 from severity_ranker import extract_information
-
+from random import randint
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 class CrimeReporter:
@@ -49,7 +49,7 @@ class CrimeReporter:
         for incident in new_incidents:
             report = incident.to_dict()
             report["Recent"] = False
-            severity = 1
+            severity = randint(1, 10)
             """
             info = extract_information(incident.incident_description)
             if len(info) > 2:
@@ -58,7 +58,6 @@ class CrimeReporter:
                 severity = int(info)
             """
             report["Severity"] = severity
-            print(report)
             try:
                 data, count = self.supabase.table('CrimeReports').insert(report).execute()
             except:

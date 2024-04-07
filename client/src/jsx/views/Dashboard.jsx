@@ -142,7 +142,7 @@ const Dashboard = () => {
     try {
       const response = await fetch('final_reports.csv')
       const csvText = await response.text()
-      let data = filterYear(csvText, 2022)
+      let data = filterYear(csvText, -1)
 
       if (data.length === 0) {
         throw new Error('No valid latitude and longitude data found.')
