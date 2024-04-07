@@ -12,7 +12,11 @@ from supabase import Client, create_client
 from severity_ranker import extract_information
 
 dp = {}
-df = pd.read_csv("full_reports.csv")
+df = pd.read_csv("client/public/final_reports.csv")
+df = df[df['Latitude'].notna()]
+df = df[df['Longitude'].notna()]
+df = df[df["Incident Year"] == 2022]
+print(df)
 """
 df["Severity"] = 1
 for index, row in df.iterrows():
@@ -33,6 +37,3 @@ for index, row in df.iterrows():
 print(df)
 df.to_csv("full_reports.csv", encoding='utf-8', index=False)
 """
-for index, row in df.iterrows():
-    print(row["Incident Description"], "    ", row["Severity"])
-    print("----------------------------------------------------")

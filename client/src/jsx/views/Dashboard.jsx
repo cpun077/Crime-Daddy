@@ -76,7 +76,16 @@ const Dashboard = () => {
 
     const filtered = rows.map(row => {
       const localyear = parseInt(row[yearIndex])
-      const pointData = row[pointIndex].match(/POINT \((-?\d+\.\d+) (-?\d+\.\d+)\)/);
+      let i = 1;
+      let value = row[pointIndex]
+      while(value.slice(0, 5) !== "POINT") {
+        value = row[pointIndex + i]
+        i += 1
+        if(i == 10) {
+          break;
+        }
+      }
+      const pointData = value.match(/POINT \((-?\d+\.\d+) (-?\d+\.\d+)\)/);
       if (pointData && pointData.length === 3 && (year === -1 || localyear === year)) {
         return [parseFloat(pointData[2]), parseFloat(pointData[1])]
       } else {
@@ -92,7 +101,7 @@ const Dashboard = () => {
     try {
       const response = await fetch('final_reports.csv')
       const csvText = await response.text()
-      let data = filterYear(csvText, -1)
+      let data = filterYear(csvText, 2022)
 
       if (data.length === 0) {
         throw new Error('No valid latitude and longitude data found.')
