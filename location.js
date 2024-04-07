@@ -1,7 +1,7 @@
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else { 
+    } else {
         document.getElementById("location").innerHTML = "Geolocation is not supported by this browser.";
     }
 }
@@ -9,9 +9,12 @@ function getLocation() {
 function showPosition(position) {
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
-    
-    // Now, send this location to your Python backend
-    fetch('/check-crimes', {
+
+    // Display the user's location for debugging purposes
+    let locationHtml = `Your Location: Latitude: ${latitude}, Longitude: ${longitude}<br>`;
+    document.getElementById("location").innerHTML = locationHtml;
+
+    fetch('http://localhost:5000/check-crimes', {  // Make sure this URL matches your Flask app's URL
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -20,12 +23,18 @@ function showPosition(position) {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById("location").innerHTML = data.message;
+        // Append crime data to the user's location information
+        let crimesHtml = data.crimes.map(crime =>
+            `<li>${crime.incident_description} at ${crime.latitude}, ${crime.longitude}</li>`  // Adjust based on your crime data structure
+        ).join('');
+        document.getElementById("location").innerHTML += `<ul>${crimesHtml}</ul>`;
     })
     .catch((error) => {
         console.error('Error:', error);
+        document.getElementById("location").innerHTML += `Error fetching crimes: ${error}`;
     });
 }
+
 
 function showError(error) {
     switch(error.code) {
