@@ -1,10 +1,10 @@
 import '../../css/subscribe.css';
 import { useFormik } from 'formik';
-import { createClient } from '@supabase/supabase-js';
 import { Alert, AlertTitle } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(process.env.REACT_APP_URL, process.env.REACT_APP_KEY)
 

@@ -6,6 +6,9 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import { useNavigate } from 'react-router-dom';
 import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(process.env.REACT_APP_URL, process.env.REACT_APP_KEY)
 
 const ChatMsg = (props) => {
   return (
@@ -20,23 +23,52 @@ const ChatMsg = (props) => {
 
 const Dashboard = () => {
 
-  const [log, setLog] = useState([
-    {
-      text: 'Car theft on 123 Avenue at 1:23 am',
-    },
-  ])
+  const [log, setLog] = useState([])
 
   const scroll = useRef()
   useEffect(() => {
     scroll.current.scrollIntoView(false)
-  }, [log]);
+  }, [log])
+
   const navigate = useNavigate();
 
-  async function getAlert() {
+  useEffect(() => {
+    getAlerts()
+  }, [])
 
+  const getAlerts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('CrimeReports')
+        .select('*')
+        .eq('Recent', false)
+        .limit(100)
+
+      if (error) {
+        console.log(error.message)
+      } else {
+        let newlogs = data.map(msg => {
+          let time = msg.incident_datetime.split('T')[1].split('+')[0]
+          let loc = !isNaN(msg.analysis_neighborhood) ? (msg.analysis_neighborhood) : (msg.police_district)
+          return `${time} ${msg.incident_description} (${loc})`
+        })
+        console.log(newlogs)
+
+        const { error: updateError } = await supabase
+            .from('CrimeReports')
+            .update({ Recent: true })
+            .eq('Recent', false)
+        if (updateError) {
+          console.log(updateError)
+        }
+        setLog(prevlogs => [...prevlogs, ...newlogs])
+      }
+    } catch (error) {
+      console.error('Error checking for duplicate email or inserting email:', error)
+    }
   }
 
-  async function getVisual() {
+  const getVisual = async () => {
     try {
       const response = await fetch('testdata.csv')
       const csvText = await response.text();
@@ -97,7 +129,7 @@ const Dashboard = () => {
               <div>
                 <ChatMsg
                   id={'severe'}
-                  text={msg.text}
+                  text={msg}
                 />
               </div>
             ))}
