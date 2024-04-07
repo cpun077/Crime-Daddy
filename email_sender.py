@@ -9,6 +9,7 @@ import pandas as pd
 
 from crime_sender import send_message
 from supabase import Client, create_client
+from severity_ranker import extract_information
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
@@ -39,12 +40,23 @@ class CrimeReporter:
             date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%f")
             if date > latest_date:
                 new_incidents.append(self.df.iloc[i])
+
         print(f"Reporting {len(new_incidents)} new incidents...")
+
         self.config["latest_time"] = self.df.iloc[0].incident_datetime
         with open("config.json", "w") as jsonFile:
             json.dump(self.config, jsonFile, indent=4)
+
         for incident in new_incidents:
-            data, count = self.supabase.table('CrimeReports').insert(incident.to_dict()).execute()
+            report = incident.to_dict()
+            report["Recent"] = False
+            info = extract_information(incident.incident_description)
+            if len(info) > 2:
+                severity = 1
+            else:
+                severity = int(info)
+            report["Severity"] = severity
+            data, count = self.supabase.table('CrimeReports').insert(report).execute()
             send_message(incident)
 
 
