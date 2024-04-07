@@ -67,21 +67,20 @@ const Dashboard = () => {
   }, [])
 
   const filterYear = (text, year) => {
-    
     const rows = text.trim().split('\n').map(row => row.split(','))
     const header = rows.shift()
 
     const yearIndex = header.indexOf('Incident Year')
     const pointIndex = header.indexOf('Point')
 
-    const filtered = rows.map(row => {
+    const data = rows.map(row => {
       const localyear = parseInt(row[yearIndex])
       let i = 1;
       let value = row[pointIndex]
-      while(value.slice(0, 5) !== "POINT") {
+      while (value.slice(0, 5) !== "POINT") {
         value = row[pointIndex + i]
         i += 1
-        if(i == 10) {
+        if (i == 10) {
           break;
         }
       }
@@ -93,8 +92,7 @@ const Dashboard = () => {
       }
     }).filter(item => item !== null)
 
-    console.log(filtered)
-    return filtered
+    return data
   }
 
   const getVisual = async () => {
@@ -112,13 +110,32 @@ const Dashboard = () => {
       const meanLat = sumLat / data.length
       const meanLng = sumLng / data.length
 
-      const map = L.map('map').setView([meanLat, meanLng], 12)
-
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      const heatAll = L.heatLayer(data, { radius: 10 })
+      const geo = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map)
+      })
+      const heat24 = L.heatLayer(filterYear(csvText, 2024), { radius: 10 })
+      const heat20 = L.heatLayer(filterYear(csvText, 2020), { radius: 10 })
+      const heat18 = L.heatLayer(filterYear(csvText, 2018), { radius: 10 })
+      const layers = [
+        heatAll,
+        geo,
+        heat24,
+        heat20,
+        heat18,
+      ]
 
-      const heatmapLayer = L.heatLayer(data, { radius: 10 }).addTo(map);
+      const map = L.map('map', {
+        center: [meanLat, meanLng],
+        zoom: 12,
+        layers: layers
+      })
+      const layerControl = L.control.layers({
+        '2024 Heatmap': heat24,
+        '2020 Heatmap': heat20,
+        '2018 Heatmap': heat18,
+        'Cumulative Heatmap': heatAll,
+      }).addTo(map)
 
     } catch (error) {
       console.error('Error fetching or processing CSV data:', error)
