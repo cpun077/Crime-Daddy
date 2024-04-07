@@ -13,11 +13,11 @@ const supabase = createClient(process.env.REACT_APP_URL, process.env.REACT_APP_K
 
 const ChatMsg = (props) => {
   return (
-    <div className='msg' id={props.id}>
+    <div className='msg' style={{ backgroundColor: props.color }}>
       <LocalPoliceOutlinedIcon />
-      <div className='text'>
+      <h5 className='text'>
         {props.text}
-      </div>
+      </h5>
     </div>
   )
 }
@@ -46,7 +46,8 @@ const Dashboard = () => {
         let msg = data.new
         let time = msg.incident_datetime.split('T')[1].split('+')[0]
         let loc = !isNaN(msg.analysis_neighborhood) ? (msg.analysis_neighborhood) : (msg.police_district)
-        let newlog = `${time} ${msg.incident_description} (${loc})`
+        console.log(msg)
+        let newlog = {msg:`${time} ${msg.incident_description} (${loc})`, color:generateColor(msg.Severity)}
 
         setLog(prevlogs => [...prevlogs, newlog])
       })
@@ -113,6 +114,29 @@ const Dashboard = () => {
 
     return data.join('\n')
   }
+
+  const generateColor = (severity) => {
+    let red, green, blue
+  
+    if (severity >= 5) {
+      red = 255;
+      green = Math.round(255 - ((severity - 5) * (255 / 5)))
+    } else {
+      red = Math.round((severity / 5) * 255)
+      green = 255;
+    }
+  
+    blue = 0
+  
+    const redHex = red.toString(16).padStart(2, '0')
+    const greenHex = green.toString(16).padStart(2, '0')
+    const blueHex = blue.toString(16).padStart(2, '0')
+  
+    const colorHex = `#${redHex}${greenHex}${blueHex}`
+  
+    return colorHex
+  }
+
   const getVisual = async () => {
     setIsLoading(true)
     try {
@@ -182,11 +206,11 @@ const Dashboard = () => {
 
         <div className='logcontainer'>
           <div ref={scroll}>
-            {log.map((msg) => (
+            {log.map((alert) => (
               <div>
                 <ChatMsg
-                  id={'severe'}
-                  text={msg}
+                  color={alert.color}
+                  text={alert.msg}
                 />
               </div>
             ))}
