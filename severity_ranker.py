@@ -1,6 +1,6 @@
 from openai import OpenAI
 
-api_key = "EgpbBkJTls4pKJc5qv9XT3BlbkFJZ4igKLBqO1eWBSXk18r5"
+api_key = "fake_key"
 
 client = OpenAI(api_key=api_key)
 
