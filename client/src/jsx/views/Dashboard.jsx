@@ -35,30 +35,28 @@ const Dashboard = () => {
 
   useEffect(() => {
     localStorage.setItem('alertlog', JSON.stringify(log))
-    console.log('saved to local storage', localStorage.getItem('alertlog'))
   }, [log])
 
   useEffect(() => {
     let subscription = supabase
-    .channel('todos')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'CrimeReports' }, data => {
-      let msg = data.new
-      let time = msg.incident_datetime.split('T')[1].split('+')[0]
-      let loc = !isNaN(msg.analysis_neighborhood) ? (msg.analysis_neighborhood) : (msg.police_district)
-      let newlog = `${time} ${msg.incident_description} (${loc})}`
-      console.log(newlog)
+      .channel('todos')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'CrimeReports' }, data => {
+        let msg = data.new
+        let time = msg.incident_datetime.split('T')[1].split('+')[0]
+        let loc = !isNaN(msg.analysis_neighborhood) ? (msg.analysis_neighborhood) : (msg.police_district)
+        let newlog = `${time} ${msg.incident_description} (${loc})}`
 
-      setLog(prevlogs => [...prevlogs, newlog])
-    })
-    .subscribe()
-  
+        setLog(prevlogs => [...prevlogs, newlog])
+      })
+      .subscribe()
+
     return async () => {
       subscription.unsubscribe()
       try {
         const { error } = await supabase
-            .from('CrimeReports')
-            .update({ Recent: true })
-            .eq('Recent', false)
+          .from('CrimeReports')
+          .update({ Recent: true })
+          .eq('Recent', false)
         if (error) {
           console.log(error)
         }
@@ -68,24 +66,33 @@ const Dashboard = () => {
     }
   }, [])
 
+  const filterYear = (text, year) => {
+    
+    const rows = text.trim().split('\n').map(row => row.split(','))
+    const header = rows.shift()
+
+    const yearIndex = header.indexOf('Incident Year')
+    const pointIndex = header.indexOf('Point')
+
+    const filtered = rows.map(row => {
+      const localyear = parseInt(row[yearIndex])
+      const pointData = row[pointIndex].match(/POINT \((-?\d+\.\d+) (-?\d+\.\d+)\)/);
+      if (pointData && pointData.length === 3 && (year === -1 || localyear === year)) {
+        return [parseFloat(pointData[2]), parseFloat(pointData[1])]
+      } else {
+        return null
+      }
+    }).filter(item => item !== null)
+
+    console.log(filtered)
+    return filtered
+  }
+
   const getVisual = async () => {
     try {
-      const response = await fetch('testdata.csv')
-      const csvText = await response.text();
-
-      const rows = csvText.trim().split('\n')
-      const header = rows[0].split(',').map(col => col.trim())
-      const pointIndex = header.indexOf('Point')
-
-      const data = rows.slice(1).map(row => {
-        const columns = row.split(',').map(col => col.trim());
-        const pointData = columns[pointIndex].match(/POINT \((-?\d+\.\d+) (-?\d+\.\d+)\)/);
-        if (pointData && pointData.length === 3) {
-          return [parseFloat(pointData[2]), parseFloat(pointData[1])]
-        } else {
-          return null
-        }
-      }).filter(point => point !== null)
+      const response = await fetch('final_reports.csv')
+      const csvText = await response.text()
+      let data = filterYear(csvText, -1)
 
       if (data.length === 0) {
         throw new Error('No valid latitude and longitude data found.')

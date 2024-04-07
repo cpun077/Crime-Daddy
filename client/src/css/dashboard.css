@@ -88,6 +88,7 @@
 
 .msg .text {
     margin-top: 0.2vw;
+    margin-bottom: 0.2vw;
 }
 
 .logcontainer .msg#severe {
