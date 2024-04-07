@@ -15,7 +15,7 @@ dp = {}
 df = pd.read_csv("client/public/final_reports.csv")
 df = df[df['Latitude'].notna()]
 df = df[df['Longitude'].notna()]
-df = df[df["Incident Year"] == 2022]
+df = df[df["Incident Year"] == 2024]
 print(df)
 """
 df["Severity"] = 1

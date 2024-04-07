@@ -95,6 +95,22 @@ const Dashboard = () => {
     return data
   }
 
+  const filterSeverity = (text, severity_threshold) => {
+    const rows = text.trim().split('\n').map(row => row.split(','))
+
+    const data = rows.map(row => {
+
+      const index = row.length - 1;
+      let severity = row[index]
+
+      if (severity < severity_threshold) {
+        return null 
+      }
+      return row
+    }).filter(item => item !== null)
+
+    return data.join('\n')
+  }
   const getVisual = async () => {
     try {
       const response = await fetch('final_reports.csv')
@@ -114,8 +130,12 @@ const Dashboard = () => {
       const geo = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       })
+      console.log(csvText)
+      console.log("------------------------------------------------------------\n\n\n")
+      console.log(filterSeverity(csvText, 5))
+
       const heat24 = L.heatLayer(filterYear(csvText, 2024), { radius: 10 })
-      const heat20 = L.heatLayer(filterYear(csvText, 2020), { radius: 10 })
+      const heat20 = L.heatLayer(filterYear(filterSeverity(csvText, 10), 2020), { radius: 10 })
       const heat18 = L.heatLayer(filterYear(csvText, 2018), { radius: 10 })
       const layers = [
         heatAll,
