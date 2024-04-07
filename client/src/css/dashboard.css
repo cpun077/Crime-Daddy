@@ -83,18 +83,15 @@
 .logcontainer .msg {
     display: flex;
     align-items: start;
-    padding: 0.5vw;
+    padding: 0.6vw;
+}
+
+.msg .text {
+    margin-top: 0.2vw;
 }
 
 .logcontainer .msg#severe {
     background-color: red;
-}
-
-.logcontainer .msg img {
-    width: 2vw;
-    height: 2vw;
-    background-color: white;
-    border-radius: 50%;
 }
 
 .logcontainer .msg .text {

@@ -1,10 +1,10 @@
 import '../../css/subscribe.css';
 import { useFormik } from 'formik';
-import { createClient } from '@supabase/supabase-js';
 import { Alert, AlertTitle } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(process.env.REACT_APP_URL, process.env.REACT_APP_KEY)
 
@@ -17,16 +17,16 @@ const Subscribe = () => {
 
     const onSubmit = async () => {
         try {
-            const { data, duplicateError } = await supabase
+            const { data, error } = await supabase
                 .from('CrimeEmails')
                 .select('*')
                 .eq('email', formik.values.email)
 
-            if (duplicateError) {
-                throw new Error(duplicateError.message)
+            if (error) {
+                setErrorMsg(error.message)
+                setErrVis(true)
             } else {
                 if (data.length > 0) {
-                    console.log('Duplicate email found:', formik.values.email)
                     setErrorMsg('Email already subscribed!')
                     setErrVis(true)
                 } else {
@@ -35,9 +35,9 @@ const Subscribe = () => {
                         .insert({ email: formik.values.email })
 
                     if (insertError) {
-                        throw new Error(insertError.message)
+                        setErrorMsg(insertError.message)
+                        setErrVis(true)
                     } else {
-                        console.log('Email inserted successfully: ', formik.values.email)
                         setSuccess(true)
                     }
                 }
@@ -58,8 +58,8 @@ const Subscribe = () => {
         success ? (
             <div className='sub' id='back'>
                 <h1>Success!</h1>
-                <button id='back' onClick={() => { navigate('/') }}>
-                    <h3>Return to Dashboard</h3> 
+                <button className='back' onClick={() => { navigate('/') }}>
+                    <h3>Return to Dashboard</h3>
                     <ArrowBackOutlinedIcon />
                 </button>
             </div>
@@ -68,16 +68,23 @@ const Subscribe = () => {
                 {errorMsg !== '' ?
                     (
                         <div id='errmsg' className='logerr' style={{ visibility: errVis, top: '20%' }}>
-                            <Alert variant='outlined' severity='error' >
-                                <AlertTitle>{'Error'}</AlertTitle>
+                            <Alert variant='filled' severity='error' >
+                                <AlertTitle>{'Error Occured'}</AlertTitle>
                                 <strong>{errorMsg}</strong>
                             </Alert>
                         </div>
                     ) : (<div></div>)
                 }
 
+                <button className='back' id='small' onClick={() => { navigate('/') }}>
+                    <h3>Back</h3>
+                    <ArrowBackOutlinedIcon />
+                </button>
+
                 <div className='card'>
                     <h2>Email Alerts</h2>
+
+                    <div className='disclaimer'>By entering your email below you agree to receive notifications around the clock regarding crime in San Francisco.</div>
 
                     <form onSubmit={formik.handleSubmit}>
 

@@ -53,10 +53,11 @@ form {
     background-image: var(--phoenix_start);
     color: black;
     border-radius: 20px;
-    height: 40px;
+    height: 6vh;
     border: 0;
     cursor: pointer;
     width: 50%;
+    margin-bottom: 2vh;
 }
 
 form .buttoncontainer {
@@ -76,7 +77,7 @@ form .buttoncontainer {
     z-index: 9999;
   }
 
-.sub button#back {
+button.back {
     width: 20%;
     background-image: var(--phoenix_start);
     display: flex;
@@ -86,6 +87,25 @@ form .buttoncontainer {
     border: none;
 }
 
+button.back#small {
+    width: 8%;
+    background-image: var(--vicious_stance);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+    border: none;
+    position: fixed;
+    z-index: 9999;
+    top: 5vh;
+    right: 3vw;
+}
+
 .sub#back {
     background-image: url("../../public/confetti.gif");
+}
+
+.sub .disclaimer {
+    width: 90%;
 }
