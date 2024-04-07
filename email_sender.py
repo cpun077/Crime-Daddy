@@ -42,7 +42,6 @@ class CrimeReporter:
                 new_incidents.append(self.df.iloc[i])
 
         print(f"Reporting {len(new_incidents)} new incidents...")
-
         self.config["latest_time"] = self.df.iloc[0].incident_datetime
         with open("config.json", "w") as jsonFile:
             json.dump(self.config, jsonFile, indent=4)
@@ -59,7 +58,11 @@ class CrimeReporter:
                 severity = int(info)
             """
             report["Severity"] = severity
-            data, count = self.supabase.table('CrimeReports').insert(report).execute()
+            print(report)
+            try:
+                data, count = self.supabase.table('CrimeReports').insert(report).execute()
+            except:
+                continue
             send_message(incident)
 
 
