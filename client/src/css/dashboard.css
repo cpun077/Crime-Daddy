@@ -100,3 +100,9 @@
     padding: 0 0.5vw 0 0.5vw;
     overflow-wrap: break-word;
 }
+
+.loading-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

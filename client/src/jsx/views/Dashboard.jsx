@@ -7,6 +7,7 @@ import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import { useNavigate } from 'react-router-dom';
 import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
 import { createClient } from '@supabase/supabase-js';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const supabase = createClient(process.env.REACT_APP_URL, process.env.REACT_APP_KEY)
 
@@ -25,6 +26,7 @@ const Dashboard = () => {
 
   const previous = JSON.parse(localStorage.getItem('alertlog'))
   const [log, setLog] = useState(previous ? previous : [])
+  const [isLoading, setIsLoading] = useState(false)
 
   const scroll = useRef()
   useEffect(() => {
@@ -44,7 +46,7 @@ const Dashboard = () => {
         let msg = data.new
         let time = msg.incident_datetime.split('T')[1].split('+')[0]
         let loc = !isNaN(msg.analysis_neighborhood) ? (msg.analysis_neighborhood) : (msg.police_district)
-        let newlog = `${time} ${msg.incident_description} (${loc})}`
+        let newlog = `${time} ${msg.incident_description} (${loc})`
 
         setLog(prevlogs => [...prevlogs, newlog])
       })
@@ -104,7 +106,7 @@ const Dashboard = () => {
       let severity = row[index]
 
       if (severity < severity_threshold) {
-        return null 
+        return null
       }
       return row
     }).filter(item => item !== null)
@@ -112,6 +114,7 @@ const Dashboard = () => {
     return data.join('\n')
   }
   const getVisual = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch('final_reports.csv')
       const csvText = await response.text()
@@ -130,9 +133,6 @@ const Dashboard = () => {
       const geo = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       })
-      console.log(csvText)
-      console.log("------------------------------------------------------------\n\n\n")
-      console.log(filterSeverity(csvText, 5))
 
       const heat24 = L.heatLayer(filterYear(csvText, 2024), { radius: 10 })
       const heat20 = L.heatLayer(filterYear(filterSeverity(csvText, 10), 2020), { radius: 10 })
@@ -152,11 +152,11 @@ const Dashboard = () => {
       })
       const layerControl = L.control.layers({
         '2024 Heatmap': heat24,
-        '2020 Heatmap': heat20,
+        '2020 Extreme Crime Heatmap': heat20,
         '2018 Heatmap': heat18,
         'Cumulative Heatmap': heatAll,
       }).addTo(map)
-
+      setIsLoading(false)
     } catch (error) {
       console.error('Error fetching or processing CSV data:', error)
     }
@@ -165,10 +165,14 @@ const Dashboard = () => {
   return (
     <div className='dashboard'>
       <div id='map'>
-        <div className='placeholder'>
+        {isLoading ? (
+          <div className="loading-screen">
+            <CircularProgress color="primary" />
+          </div>
+        ) : (<div className='placeholder'>
           <h3>Heatmap</h3>
           <MapOutlinedIcon fontSize='large' />
-        </div>
+        </div>)}
       </div>
 
       <div className='chat'>
