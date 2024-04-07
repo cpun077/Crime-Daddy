@@ -23,42 +23,22 @@ const ChatMsg = (props) => {
 
 const Dashboard = () => {
 
-  const [log, setLog] = useState([])
+  const previous = JSON.parse(localStorage.getItem('alertlog'))
+  const [log, setLog] = useState(previous ? previous : [])
 
   const scroll = useRef()
   useEffect(() => {
     scroll.current.scrollIntoView(false)
   }, [log])
 
-  const navigate = useNavigate();
-
-  const getAlerts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('CrimeReports')
-        .select('*')
-        .eq('Recent', false)
-        .limit(100)
-
-      if (error) {
-        console.log(error.message)
-      } else {
-        let newlogs = data.map(msg => {
-          let time = msg.incident_datetime.split('T')[1].split('+')[0]
-          let loc = !isNaN(msg.analysis_neighborhood) ? (msg.analysis_neighborhood) : (msg.police_district)
-          return `${time} ${msg.incident_description} (${loc})`
-        })
-        console.log(newlogs)
-
-        setLog(prevlogs => [...prevlogs, ...newlogs])
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const navigate = useNavigate()
 
   useEffect(() => {
+    localStorage.setItem('alertlog', JSON.stringify(log))
+    console.log('saved to local storage', localStorage.getItem('alertlog'))
+  }, [log])
 
+  useEffect(() => {
     let subscription = supabase
     .channel('todos')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'CrimeReports' }, data => {
